@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App -Easy Tutorials</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="card">
+   <div class="search">
+    <input type="Text" placeholder="enter city name"
+    spellcheck="false">
+    <button><img src="./weather-app-img/images/search.png" alt=""></button>
+   </div>
+   <div>
+    <div class="error">
+        <p>Invalid City Name</p>
+    </div>
+   </div>
+   
+    <div class="weather">
+        <img src="./weather-app-img/images/rain.png">
+        <h1 class="temp">22°C</h1>
+        <h2 class="city">Hyderabad</h2>
+        <div class="details">
+    <div class="col">
+        <img src="./weather-app-img/images/humidity.png">
+        <div>
+            <p class="humidity">50%</p>
+            <p>Humidity</p>
+        </div>
+    </div>
+
+    <div class="col">
+        <img src="./weather-app-img/images/wind.png">
+        <div>
+            <p class="wind">15 km/hr</p>
+            <p>Wind Speed</p>
+        </div>
+    </div>
+</div>
+
+            
+    </div></div>
+    
+   
+<script>
+const apikey = "ce7a85b9ddf64b32a59102859251612";
+const apiUrl = "https://api.weatherapi.com/v1/current.json?aqi=no&key=" + apikey + "&q=";
+
+const searchBox = document.querySelector(".search input");
+const searchBtn = document.querySelector(".search button");
+const weatherIcon = document.querySelector(".weather img");
+
+async function checkWeather(city) {
+    const response = await fetch(apiUrl + city);
+
+    if (!response.ok) {
+        document.querySelector(".error").style.display = "block";
+        document.querySelector(".weather").style.display = "none";
+        return;
+    }
+
+    const data = await response.json();
+
+    document.querySelector(".city").innerHTML = data.location.name;
+    document.querySelector(".temp").innerHTML = data.current.temp_c + "°C";
+    document.querySelector(".humidity").innerHTML = data.current.humidity + "%";
+    document.querySelector(".wind").innerHTML = data.current.wind_kph + " km/hr";
+
+    const condition = data.current.condition.text;
+
+    if (condition.includes("Cloud")) {
+        weatherIcon.src = "./weather-app-img/images/cloud.png";
+        
+
+    } else if (condition.includes("Rain")) {
+        weatherIcon.src = "./weather-app-img/images/rain.png";
+    } else if (condition.includes("Clear")) {
+        weatherIcon.src = "./weather-app-img/images/clear.png";
+    } else if (condition.includes("Mist")) {
+        weatherIcon.src = "./weather-app-img/images/mist.png";
+    } else {
+        weatherIcon.src = "./weather-app-img/images/drizzle.png";
+    }
+
+    document.querySelector(".weather").style.display = "block";
+    document.querySelector(".error").style.display = "none";
+}
+
+searchBtn.addEventListener("click", () => {
+    checkWeather(searchBox.value);
+});
+</script>
+
+</body>
+</html>
